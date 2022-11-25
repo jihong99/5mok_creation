@@ -129,7 +129,8 @@ void OmokUI::moveCursor(int &y, int &x, bool validate[][73], bool &player) {
 void OmokUI::decideWinner(int x, int y) {
     int count1 = 1; // count row
     int count2 = 1; // count col
-    int count3 = 1; // count diag
+    int count3 = 1; // count left diag
+    int count4 = 1; // count right diag
     bool iscontinue1 = true;
     bool iscontinue2 = true;
     char comp = checkerboard[x][y];
@@ -143,7 +144,10 @@ void OmokUI::decideWinner(int x, int y) {
         } // column
         if (checkStone(x + 2 * i, y + 4 * i, comp, iscontinue1)) {
             count3++;
-        } // diagonal
+        } // left diagonal
+        if (checkStone(x - 2 * i, y + 4 * i, comp, iscontinue1)) {
+            count4++;
+        } // right diagonal
     }
     for (int i = -1; i > -5; i--) {
         if (checkStone(x, y + 4 * i, comp, iscontinue2)) {
@@ -154,10 +158,13 @@ void OmokUI::decideWinner(int x, int y) {
         } // column
         if (checkStone(x + 2 * i, y + 4 * i, comp, iscontinue1)) {
             count3++;
-        } // diagonal
+        } // left diagonal
+        if (checkStone(x - 2 * i, y + 4 * i, comp, iscontinue1)) {
+            count4++;
+        } // right diagonal
     }
 
-    if (count1 == 5 || count2 == 5 || count3 == 5) {
+    if (count1 == 5 || count2 == 5 || count3 == 5 || count4 == 5) {
         wmove(win, 37, 0);
         if (checkerboard[x][y] == 'O') {
             wprintw(win, "player 1win");
