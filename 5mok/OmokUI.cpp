@@ -193,3 +193,8 @@ bool OmokUI::checkStone(int x, int y, char comp, bool &iscontinue) {
 }
 
 int OmokUI::getWinner() { return winner; }
+pair<int, int> getCurrentPosition(int x, int y) {
+    pair<int, int> currentPosition;
+    currentPosition = make_pair(x, y);
+    return currentPosition;
+}
