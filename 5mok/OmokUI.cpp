@@ -11,8 +11,6 @@ int main(int argc, char const *argv[]) {
 }
 OmokUI::OmokUI() { winner = -1; }
 void OmokUI::run() {
-    WINDOW *window1;
-    vector<vector<char>> checkerboard;
     bool validate[37][73];
     for (int i = 0; i < 37; i++) {
         memset(validate[i], true, sizeof(bool) * 73);
@@ -30,23 +28,23 @@ void OmokUI::run() {
         init_pair(1, COLOR_BLACK, COLOR_YELLOW);
     }
     refresh();
-    window1 = newwin(80, 80, 0, 0);
+    win = newwin(80, 80, 0, 0);
 
-    wbkgd(window1, COLOR_PAIR(1));
-    getyx(window1, y, x);
-    drawCheckerboard(window1, checkerboard);
+    wbkgd(win, COLOR_PAIR(1));
+    getyx(win, y, x);
+    drawCheckerboard();
 
-    wmove(window1, 0, 0);
+    wmove(win, 0, 0);
 
     while (1) { // test while
-        moveCursor(window1, y, x, checkerboard, validate, player);
+        moveCursor(y, x, validate, player);
     }
 
     getch();
     endwin();
 }
 
-void OmokUI::drawCheckerboard(WINDOW *win, vector<vector<char>> &checkerboard) {
+void OmokUI::drawCheckerboard() {
     vector<char> row1;
     vector<char> row2;
     row1.push_back('+');
@@ -65,10 +63,10 @@ void OmokUI::drawCheckerboard(WINDOW *win, vector<vector<char>> &checkerboard) {
     }
     checkerboard.push_back(row1);
 
-    printCheckerboard(win, checkerboard);
+    printCheckerboard();
 }
 
-void OmokUI::printCheckerboard(WINDOW *win, vector<vector<char>> checkerboard) {
+void OmokUI::printCheckerboard() {
     wclear(win);
     for (int i = 0; i < checkerboard.size(); i++) {
         for (int j = 0; j < checkerboard[i].size(); j++) {
@@ -79,9 +77,7 @@ void OmokUI::printCheckerboard(WINDOW *win, vector<vector<char>> checkerboard) {
     wrefresh(win);
 }
 
-void OmokUI::moveCursor(WINDOW *win, int &y, int &x,
-                        vector<vector<char>> &checkerboard, bool validate[][73],
-                        bool &player) {
+void OmokUI::moveCursor(int &y, int &x, bool validate[][73], bool &player) {
     int c;
     keypad(win, TRUE);
     noecho();
@@ -124,14 +120,13 @@ void OmokUI::moveCursor(WINDOW *win, int &y, int &x,
             validate[x][y] = false;
             player = true;
         }
-        printCheckerboard(win, checkerboard);
+        printCheckerboard();
         wmove(win, x, y);
-        decideWinner(win, x, y, checkerboard);
+        decideWinner(x, y);
     }
 }
 
-void OmokUI::decideWinner(WINDOW *win, int x, int y,
-                          vector<vector<char>> checkerboard) {
+void OmokUI::decideWinner(int x, int y) {
     int count1 = 1; // count row
     int count2 = 1; // count col
     int count3 = 1; // count diag
@@ -140,24 +135,24 @@ void OmokUI::decideWinner(WINDOW *win, int x, int y,
     char comp = checkerboard[x][y];
 
     for (int i = 1; i < 5; i++) {
-        if (checkStone(x, y + 4 * i, checkerboard, comp, iscontinue1)) {
+        if (checkStone(x, y + 4 * i, comp, iscontinue1)) {
             count1++;
         } // row
-        if (checkStone(x + 2 * i, y, checkerboard, comp, iscontinue1)) {
+        if (checkStone(x + 2 * i, y, comp, iscontinue1)) {
             count2++;
         } // column
-        if (checkStone(x + 2 * i, y + 4 * i, checkerboard, comp, iscontinue1)) {
+        if (checkStone(x + 2 * i, y + 4 * i, comp, iscontinue1)) {
             count3++;
         } // diagonal
     }
     for (int i = -1; i > -5; i--) {
-        if (checkStone(x, y + 4 * i, checkerboard, comp, iscontinue2)) {
+        if (checkStone(x, y + 4 * i, comp, iscontinue2)) {
             count1++;
         } // row
-        if (checkStone(x + 2 * i, y, checkerboard, comp, iscontinue1)) {
+        if (checkStone(x + 2 * i, y, comp, iscontinue1)) {
             count2++;
         } // column
-        if (checkStone(x + 2 * i, y + 4 * i, checkerboard, comp, iscontinue1)) {
+        if (checkStone(x + 2 * i, y + 4 * i, comp, iscontinue1)) {
             count3++;
         } // diagonal
     }
@@ -177,8 +172,7 @@ void OmokUI::decideWinner(WINDOW *win, int x, int y,
     }
 }
 
-bool OmokUI::checkStone(int x, int y, vector<vector<char>> checkerboard,
-                        char comp, bool &iscontinue) {
+bool OmokUI::checkStone(int x, int y, char comp, bool &iscontinue) {
     if (x < 0 || x >= 37 || y < 0 || y >= 73) {
         return false;
     }
