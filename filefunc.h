@@ -19,7 +19,7 @@ typedef struct Userdata {
     int lose;
 } User;
 
-void userfilesave(char* loginname1, char* loginname2 int result1, int result2);
+void userfilesave(char* loginname1, char* loginname2 ,int result);
 
 void userfilecreate(char* newusername);
 
