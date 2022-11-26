@@ -21,10 +21,10 @@ int main(){
   
      //이제 게임구현팀에서 각 플레이어들의 승패값을 int 형 으로 받아와야함 (이겼으면 1, 졌으면 0)
  
-    int result1=0;  //player1의 방금 게임 결과, 패배했음으로 0 받아왔다고 가정
-    int result2=1; // 같이 플레이한 player2는 당연히 이김, 1받아왔다고 가정
+    int result=0;  //player1의 방금 게임 결과, getWin 함수로부터 받아옴, 패배했음으로 0 받아왔다고 가정
+     // 같이 플레이한 player2는 당연히 이김
   
-    userfilesave(userid1,userid2,result1,result2); //게임이 끝난 후 항상 호출되게 해야함, 로그인할 때 만들어 놓은 각각의 유저 데이터파일에 승패값을 받아서 승,패,점수 값 업데이트
+    userfilesave(userid1,userid2,result); //게임이 끝난 후 항상 호출되게 해야함, 로그인할 때 만들어 놓은 각각의 유저 데이터파일에 승패값을 받아서 승,패,점수 값 업데이트
   
     return 0;
  
