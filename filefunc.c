@@ -186,3 +186,101 @@ void userfilecreate(char* newusername) {  //user file first time create, one tim
         free(user);
     }
 }
+
+void scoreboard(char* loginname1, char* loginname2) { 
+        
+    char filename1[30] = "./"; // path fix
+    char filename2[30] = "./";
+    char dat[] = ".dat";
+    strcat(filename1, loginname1); // making the './name.dat' form
+    strcat(filename1, dat);
+
+    strcat(filename2, loginname2);
+    strcat(filename2, dat);
+
+    //printf("filename1 : %s\n", filename1);
+    //printf("filename2 : %s\n", filename2);
+    char *pathname2 = filename2;
+    char *pathname1 = filename1; // convert to pointer
+
+    int fd1;
+    int fd2;
+    ssize_t readsize1 = 0;
+    ssize_t readsize2 = 0;
+
+    if(access(pathname1, F_OK)==0 && access(pathname2, F_OK)==0){
+        User *olduser1 = (User *)malloc(sizeof(User)); // struct generate
+        memset(olduser1->name, '\0', 31);
+
+        olduser1->win = 0;
+        olduser1->lose = 0;
+        olduser1->score = 0;
+
+        fd1 = open(pathname1, O_RDWR, 0666); // open
+
+        if (fd1 == -1) {
+            //perror("open error");
+            exit(-1);
+        }
+
+        readsize1 = read(fd1, (User *)olduser1, sizeof(User)); // read
+
+        if (readsize1 == -1) {
+            //perror("read error");
+            exit(-2);
+        }
+        //printf("fd1 : %d , rsize: %ld\n", fd1, readsize);
+        User *olduser2 = (User *)malloc(sizeof(User)); // struct generate
+        memset(olduser2->name, '\0', 31);
+
+        olduser2->win = 0;
+        olduser2->lose = 0;
+        olduser2->score = 0;
+
+        fd2 = open(pathname2, O_RDWR, 0666); // open
+
+        if (fd2 == -1) {
+            //perror("open error");
+            exit(-1);
+        }
+
+        readsize2 = read(fd2, (User *)olduser2, sizeof(User)); // read
+
+        if (readsize2 == -1) {
+            //perror("read error");
+            exit(-2);
+        }
+
+        initscr();
+        noecho();
+        clear();
+
+        mvprintw(0, 0, "Press any botton to leave");
+
+        mvprintw(15, 10, "[%s's scoreboard]", olduser1->name);
+        mvprintw(16, 10, "Win %d times", olduser1->win);
+        mvprintw(17, 10, "Lose %d times", olduser1->lose);
+        mvprintw(18, 10, "Your score now : %d", olduser1->score);
+
+        mvprintw(15, 35, "[%s's scoreboard]", olduser2->name);
+        mvprintw(16, 35, "Win %d times", olduser2->win);
+        mvprintw(17, 35, "Lose %d times", olduser2->lose);
+        mvprintw(18, 35, "Your score now : %d", olduser2->score);
+
+        refresh();
+
+        getch();
+        endwin();
+
+        close(fd1);
+        close(fd2);
+        free(olduser1);
+        free(olduser2);
+    }
+    else{
+        perror("File not exists");
+        exit(-4);
+    }
+
+    
+}
