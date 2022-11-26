@@ -23,4 +23,6 @@ void userfilesave(char* loginname1, char* loginname2 ,int result);
 
 void userfilecreate(char* newusername);
 
+void scoreboard(char* loginname1,char* loginname2);
+
 #endif
