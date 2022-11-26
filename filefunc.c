@@ -11,7 +11,7 @@
 #include "filefunc.h"
 
 
-void userfilesave(char* loginname1,char* loginname2, int result1,int result2){
+void userfilesave(char* loginname1,char* loginname2, int result){
 
     // loginname= received username from login (changeable)
     // result = win(1) or lose(0) from last game (changeable)
@@ -64,11 +64,11 @@ void userfilesave(char* loginname1,char* loginname2, int result1,int result2){
         }
         printf("fd1 : %d , rsize: %ld\n", fd1, readsize);
 
-        if (result1 == 0) { // if last game lost
+        if (result == 0) { // if player1 last game lost
             olduser1->lose = olduser1->lose + 1;
             olduser1->score = olduser1->score - 1;
 
-        } else { // if last game won
+        } else if(result==1){ // if player1 last game won
             olduser1->win = olduser1->win + 1;
             olduser1->score = olduser1->score + 3;
         }
@@ -116,11 +116,11 @@ void userfilesave(char* loginname1,char* loginname2, int result1,int result2){
         }
         printf("fd2 : %d , rsize: %ld\n", fd2, readsize);
 
-        if (result2 == 0) { // if last game lost
+        if (result == 1) { // if player2 last game lost
             olduser2->lose = olduser2->lose + 1;
             olduser2->score = olduser2->score - 1;
 
-        } else { // if last game won
+        } else if(result==0) { // if player2 last game won
             olduser2->win = olduser2->win + 1;
             olduser2->score = olduser2->score + 3;
         }
