@@ -13,7 +13,7 @@ private:
     vector<vector<char>> checkerboard;
 public:
     void push_xy(pair<int,int> p);
-    void push_player(bool player);
+    void push_player(bool &player);
     void pop_queue();
     void print_replay();
     void run_test();
