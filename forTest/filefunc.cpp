@@ -302,7 +302,6 @@ void userfilecreate(
 }
 
 int scoreboard(string username1, string username2) {
-
     string a;
     a = username1;
     string b;
@@ -373,7 +372,7 @@ int scoreboard(string username1, string username2) {
             // perror("read error");
             exit(-2);
         }
-		
+
         initscr();
         noecho();
         clear();
@@ -391,20 +390,23 @@ int scoreboard(string username1, string username2) {
         mvprintw(18, 35, "Your score now : %d", olduser2->score);
 
         refresh();
-		char ch=getch();
-        if(ch=='q'){
-			       
-        	close(fd1);
-        	close(fd2);
-        	free(olduser1);
-        	free(olduser2);
-			endwin();
-			return 1;
-		}
-		
+        char ch = getch();
+        while (ch != 'q') {
+            ch = getch();
+        }
+        if (ch == 'q') {
+
+            close(fd1);
+            close(fd2);
+            free(olduser1);
+            free(olduser2);
+            endwin();
+            return 1;
+        }
+
     } else {
         // perror("File not exists");
         exit(-4);
     }
-	return 1;
+    return 1;
 }
