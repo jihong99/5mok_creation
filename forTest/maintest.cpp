@@ -14,10 +14,14 @@ int main() {
             login->startLogin();
             user1 = login->getUser1();
             user2 = login->getUser2();
+            omokGame->setUsername(user1, user2);
         }
+
         userfilecreate(user1, user2);
+
         scoreboard(user1, user2);
         omokGame->run();
+
         play = omokGame->isreplay;
         int result = omokGame->getWinner();
         userfilesave(user1, user2, result);

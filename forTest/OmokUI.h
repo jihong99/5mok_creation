@@ -2,6 +2,7 @@
 #include "replay.h"
 #include <ncurses.h>
 #include <string.h>
+#include <string>
 #include <vector>
 
 using namespace std;
@@ -11,6 +12,8 @@ class OmokUI {
     int winner;
     bool isGameFinish;
     WINDOW *win;
+    string user1;
+    string user2;
 
   public:
     int isreplay; // 0 : login page, 1 : game replay
@@ -24,4 +27,5 @@ class OmokUI {
     void decideWinner(int x, int y, Queue *q);
     bool checkStone(int x, int y, char comp, bool &iscontinue);
     int getWinner(); // return winner (player1 return 1, player2 return 0)
+    void setUsername(string user1, string user2);
 };

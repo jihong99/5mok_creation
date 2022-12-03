@@ -8,6 +8,8 @@ OmokUI::OmokUI() {
     winner = -1;
     isreplay = 0;
     isGameFinish = false;
+    user1 = "";
+    user2 = "";
 }
 void OmokUI::run() {
     wclear(win);
@@ -180,12 +182,12 @@ void OmokUI::decideWinner(int x, int y, Queue *q) {
         isGameFinish = true;
         wmove(win, 37, 0);
         if (checkerboard[x][y] == 'O') {
-            wprintw(win, "player 1win\n");
+            wprintw(win, "%s win\n", user1.c_str());
             wrefresh(win);
             winner = 1;
         }
         if (checkerboard[x][y] == 'X') {
-            wprintw(win, "player 2win\n");
+            wprintw(win, "%s win\n", user2.c_str());
             wrefresh(win);
             winner = 0;
         }
@@ -224,3 +226,7 @@ bool OmokUI::checkStone(int x, int y, char comp, bool &iscontinue) {
 }
 
 int OmokUI::getWinner() { return winner; }
+void OmokUI::setUsername(string user1, string user2) {
+    this->user1 = user1;
+    this->user2 = user2;
+}
