@@ -63,7 +63,6 @@ void login() {
                 break;
             case 27:      // esc key
                 endwin(); // exit --> back to menu window
-                return 27;
             default:
                 form_driver(my_form, ch); // input string
                 break;
