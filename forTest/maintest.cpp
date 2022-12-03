@@ -131,7 +131,7 @@ int main() {
         scoreboard(user1, user2);
         a->run();
         play = a->isreplay;
-        int result = 0;
+        int result = a->getWinner();
         userfilesave(user1, user2, result);
         delete a;
     }

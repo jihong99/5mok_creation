@@ -45,6 +45,8 @@ void OmokUI::run() {
     }
     wclear(win);
     endwin();
+    delete q;
+    return;
 }
 
 void OmokUI::drawCheckerboard() {
