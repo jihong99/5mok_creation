@@ -24,9 +24,7 @@ void Queue::run_test(){
     drawCheckerboard();
     wmove(win,0,0);
 
-    while(1){
-        print_replay();
-    }
+    print_replay();
 
     getch();
     endwin();
@@ -50,7 +48,8 @@ void Queue::pop_queue(){
 }
 
 void Queue::print_replay(){
-    OmokUI ui;
+    while(1){
+        OmokUI ui;
     int c;
     keypad(win, TRUE);
     noecho();
@@ -63,23 +62,39 @@ void Queue::print_replay(){
         checkerboard[x][y] = queue_player.front();
         printCheckerboard();
         wprintw(win, "Press ENTER KEY to see next..\n");
+        wprintw(win, "Press ESC KEY to go to login page\n");
 
         pop_queue();
 
         if(queue_xy.empty() == true && queue_player.empty() == true){
             wrefresh(win);
             wprintw(win, "do you want to play again? or go to login page?\n");
-            wprintw(win, "(play again : y / go to login page : n)");
+            wprintw(win, "(play again : y / go to login page : ESC)\n");
+
+            int d;
+            keypad(win, TRUE);
+            noecho();
+            d=wgetch(win);
+
+            if(d == 89 || d == 121){
+                ui.run();
+            }
+            if(d == 27){
+                break;
+            }
         }
     }
     else if(c == 27){
-        wprintw(win, "do you go to login page?\n");
-        //quit
+        break;
     }
     else{
         wprintw(win,"Wrong Command!\n");
     }
+    }
     
+    //login();
+    //for test, if press esc, shutdown.
+    endwin();
 }
 void Queue::drawCheckerboard() {
     vector<char> row1;
