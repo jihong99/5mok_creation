@@ -5,6 +5,7 @@
 
 int main() {
     int play = 0;
+    int cont = 0;
     string user1 = "";
     string user2 = "";
     while (play != -1) {
@@ -19,7 +20,12 @@ int main() {
 
         userfilecreate(user1, user2);
 
-        scoreboard(user1, user2);
+        cont = scoreboard(user1, user2);
+        if (cont == -1) {
+            delete omokGame;
+            delete login;
+            continue;
+        }
         omokGame->run();
 
         play = omokGame->isreplay;

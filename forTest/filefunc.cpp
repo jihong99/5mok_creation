@@ -20,6 +20,7 @@ void userfilesave(string username1, string username2, int result) {
     // result = win(1) or lose(0) from last game (changeable)
 
     string a;
+
     a = username1;
     string b;
     b = username2;
@@ -378,6 +379,7 @@ int scoreboard(string username1, string username2) {
         clear();
 
         mvprintw(0, 0, "Press q to leave");
+        mvprintw(1, 0, "Press Enter to game start");
 
         mvprintw(15, 10, "[%s's scoreboard]", olduser1->name);
         mvprintw(16, 10, "Win %d times", olduser1->win);
@@ -391,8 +393,12 @@ int scoreboard(string username1, string username2) {
 
         refresh();
         char ch = getch();
-        while (ch != 'q') {
+        while (ch != 'q' && ch != 10) {
             ch = getch();
+        }
+        if (ch == 10) {
+            endwin();
+            return 1;
         }
         if (ch == 'q') {
 
@@ -401,7 +407,7 @@ int scoreboard(string username1, string username2) {
             free(olduser1);
             free(olduser2);
             endwin();
-            return 1;
+            return -1;
         }
 
     } else {
