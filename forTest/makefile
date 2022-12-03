@@ -2,7 +2,7 @@ CC=g++
 CFLAGS=-g -Wall
 TARGET=omok
 
-OBJS=OmokUI.o filefunc.o replay.o maintest.o
+OBJS=OmokUI.o filefunc.o replay.o maintest.o login.o
 
 $(TARGET): $(OBJS)
 	$(CC) -o $@ $(OBJS) -lncurses -lform
@@ -17,3 +17,5 @@ replay.o : replay.cpp
 	$(CC) -c -o replay.o replay.cpp
 maintest.o : maintest.cpp
 	$(CC) -c -o maintest.o maintest.cpp
+login.o : login.cpp
+	$(CC) -c -o login.o login.cpp
