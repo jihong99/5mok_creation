@@ -10,9 +10,8 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
-using std::cout;
-using std::endl;
-using std::string;
+
+using namespace std;
 
 void userfilesave(string username1, string username2, int result) {
 
@@ -80,7 +79,7 @@ void userfilesave(string username1, string username2, int result) {
             olduser1->win = olduser1->win + 1;
             olduser1->score = olduser1->score + 3;
         }
-
+        lseek(fd1, 0, SEEK_SET);
         wsize = (write(fd1, (User *)olduser1, sizeof(User)));
         if (wsize == -1) {
             // perror("write name error");
@@ -133,7 +132,7 @@ void userfilesave(string username1, string username2, int result) {
             olduser2->win = olduser2->win + 1;
             olduser2->score = olduser2->score + 3;
         }
-
+        lseek(fd2, 0, SEEK_SET);
         wsize = (write(fd2, (User *)olduser2, sizeof(User)));
         if (wsize == -1) {
             // perror("write name error");
@@ -178,21 +177,18 @@ void userfilecreate(
     // printf("newfilename2: %s\n",newfilename2);
     char *newpathname1 = newfilename1;
     char *newpathname2 = newfilename2;
-    int nothing = 0;
     int fd1;
     int fd2;
     ssize_t wsize1 = 0;
     ssize_t wsize2 = 0;
-    if (access(newpathname1, F_OK) &&
-        access(newpathname2, F_OK) != -1) { // already file exists
-        nothing++;                          // do nothing
-
+    if (access(newpathname1, F_OK) == 0 &&
+        access(newpathname2, F_OK) == 0) { // already file exists
+        return;
     } else if (access(newpathname1, F_OK) == 0 &&
                access(newpathname2, F_OK) != 0) {
         User *user2 = (User *)malloc(sizeof(User));
         memset(user2->name, '\0', 31);
         strcpy(user2->name, newusername2);
-
         user2->win = 0;
         user2->lose = 0;
         user2->score = 100;
@@ -203,7 +199,6 @@ void userfilecreate(
             // perror("open error");
             exit(-1);
         }
-
         wsize2 = write(fd2, (User *)user2, sizeof(User)); // write
 
         if (wsize2 == -1) {
@@ -249,7 +244,6 @@ void userfilecreate(
         User *user1 = (User *)malloc(sizeof(User));
         memset(user1->name, '\0', 31);
         strcpy(user1->name, newusername1);
-
         user1->win = 0;
         user1->lose = 0;
         user1->score = 100;
@@ -317,7 +311,6 @@ int scoreboard(string username1, string username2) {
     char dat[] = ".dat";
     strcat(filename1, loginname1); // making the './name.dat' form
     strcat(filename1, dat);
-
     strcat(filename2, loginname2);
     strcat(filename2, dat);
 
@@ -345,7 +338,6 @@ int scoreboard(string username1, string username2) {
             // perror("open error");
             exit(-1);
         }
-
         readsize1 = read(fd1, (User *)olduser1, sizeof(User)); // read
 
         if (readsize1 == -1) {
@@ -397,6 +389,10 @@ int scoreboard(string username1, string username2) {
             ch = getch();
         }
         if (ch == 10) {
+            close(fd1);
+            close(fd2);
+            free(olduser1);
+            free(olduser2);
             endwin();
             return 1;
         }
@@ -414,5 +410,5 @@ int scoreboard(string username1, string username2) {
         // perror("File not exists");
         exit(-4);
     }
-    return 1;
+    return -1;
 }
