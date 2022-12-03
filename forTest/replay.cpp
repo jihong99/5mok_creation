@@ -1,18 +1,18 @@
-#include "OmokUI.h"
 #include "replay.h"
+#include "OmokUI.h"
 #include <ncurses.h>
 #include <string.h>
 #include <vector>
 using namespace std;
-
-void Queue::run_test(){
-    OmokUI a;
+int Queue::run_test() {
+    int isreplay = 0;
+    wclear(win);
     initscr();
 
     if (has_colors() == FALSE) {
         puts("Terminal does not support colors!");
         endwin();
-        return;
+        return false;
     } else {
         start_color();
         init_pair(1, COLOR_BLACK, COLOR_YELLOW);
@@ -22,79 +22,84 @@ void Queue::run_test(){
 
     wbkgd(win, COLOR_PAIR(1));
     drawCheckerboard();
-    wmove(win,0,0);
+    wmove(win, 0, 0);
 
-    print_replay();
+    isreplay = print_replay();
 
-    getch();
-    endwin();
+    // getch();
+    // endwin();
+    return isreplay;
 }
-void Queue::push_xy(pair<int,int> p){
-    queue_xy.push(p); //push xy
+void Queue::push_xy(pair<int, int> p) {
+    queue_xy.push(p); // push xy
 }
 
-void Queue::push_player(bool &player){
-    if(player){
-        queue_player.push('O'); //player 1
+void Queue::push_player(bool &player) {
+    if (player) {
+        queue_player.push('O'); // player 1
+    } else {
+        queue_player.push('X'); // player 2
     }
-    else{
-        queue_player.push('X'); //player 2
-    }
 }
 
-void Queue::pop_queue(){
+void Queue::pop_queue() {
     queue_xy.pop();
     queue_player.pop();
 }
 
-void Queue::print_replay(){
-    while(1){
-        OmokUI ui;
-    int c;
-    keypad(win, TRUE);
-    noecho();
-    c=wgetch(win);
+int Queue::print_replay() {
+    int isreplay = 0;
+    while (1) {
+        int c;
+        keypad(win, TRUE);
+        noecho();
+        c = wgetch(win);
 
-    if(c == 10){
-        int x = queue_xy.front().first;
-        int y = queue_xy.front().second;
-        
-        checkerboard[x][y] = queue_player.front();
-        printCheckerboard();
-        wprintw(win, "Press ENTER KEY to see next..\n");
-        wprintw(win, "Press ESC KEY to go to login page\n");
+        if (c == 10) {
+            int x = queue_xy.front().first;
+            int y = queue_xy.front().second;
 
-        pop_queue();
+            checkerboard[x][y] = queue_player.front();
+            printCheckerboard();
+            wprintw(win, "Press ENTER KEY to see next..\n");
+            wprintw(win, "Press ESC KEY to go to login page\n");
 
-        if(queue_xy.empty() == true && queue_player.empty() == true){
-            wrefresh(win);
-            wprintw(win, "do you want to play again? or go to login page?\n");
-            wprintw(win, "(play again : y / go to login page : ESC)\n");
+            pop_queue();
 
-            int d;
-            keypad(win, TRUE);
-            noecho();
-            d=wgetch(win);
+            if (queue_xy.empty() == true && queue_player.empty() == true) {
+                wrefresh(win);
+                wprintw(win,
+                        "do you want to play again? or go to login page?\n");
+                wprintw(win, "(play again : y / go to login page : ESC)\n");
 
-            if(d == 89 || d == 121){
-                ui.run();
+                int d;
+                keypad(win, TRUE);
+                noecho();
+                d = wgetch(win);
+
+                if (d == 89 || d == 121) {
+                    isreplay = 1;
+
+                    break;
+                }
+                if (d == 27) {
+                    isreplay = 0;
+                    break;
+                }
             }
-            if(d == 27){
-                break;
-            }
+        } else if (c == 27) {
+            isreplay = 0;
+            break;
+        } else {
+            wprintw(win, "Wrong Command!\n");
         }
     }
-    else if(c == 27){
-        break;
-    }
-    else{
-        wprintw(win,"Wrong Command!\n");
-    }
-    }
-    
-    //login();
-    //for test, if press esc, shutdown.
-    endwin();
+
+    // login();
+    // for test, if press esc, shutdown.
+    // endwin();
+    // wclear(win);
+    return isreplay;
 }
 void Queue::drawCheckerboard() {
     vector<char> row1;

@@ -1,14 +1,17 @@
 #include "OmokUI.h"
-#include "replay.h"
 #include <ncurses.h>
 #include <string.h>
 #include <vector>
 using namespace std;
 
-Queue q;
-
-OmokUI::OmokUI() { winner = -1; }
+OmokUI::OmokUI() {
+    winner = -1;
+    isreplay = 0;
+    isGameFinish = false;
+}
 void OmokUI::run() {
+    wclear(win);
+    Queue *q = new Queue();
     bool validate[37][73];
     for (int i = 0; i < 37; i++) {
         memset(validate[i], true, sizeof(bool) * 73);
@@ -35,10 +38,12 @@ void OmokUI::run() {
     wmove(win, 0, 0);
 
     while (1) { // test while
-        moveCursor(y, x, validate, player);
+        if (isGameFinish) {
+            break;
+        }
+        moveCursor(y, x, validate, player, q);
     }
-
-    getch();
+    wclear(win);
     endwin();
 }
 
@@ -75,9 +80,10 @@ void OmokUI::printCheckerboard() {
     wrefresh(win);
 }
 
-void OmokUI::moveCursor(int &y, int &x, bool validate[][73], bool &player) {
+void OmokUI::moveCursor(int &y, int &x, bool validate[][73], bool &player,
+                        Queue *q) {
     int c;
-    
+
     keypad(win, TRUE);
     noecho();
     c = wgetch(win);
@@ -113,24 +119,24 @@ void OmokUI::moveCursor(int &y, int &x, bool validate[][73], bool &player) {
         if (validate[x][y] && player) { // player 1
             checkerboard[x][y] = 'O';
             validate[x][y] = false;
-            q.push_xy(make_pair(x,y));
-            q.push_player(player);
+            q->push_xy(make_pair(x, y));
+            q->push_player(player);
             player = false;
         } else if (validate[x][y] && !player) { // player 2
             checkerboard[x][y] = 'X';
             validate[x][y] = false;
-            q.push_xy(make_pair(x,y));
-            q.push_player(player);
+            q->push_xy(make_pair(x, y));
+            q->push_player(player);
             player = true;
         }
         printCheckerboard();
         wmove(win, x, y);
-        decideWinner(x, y);
+        decideWinner(x, y, q);
     }
 }
 
-void OmokUI::decideWinner(int x, int y) {
-    
+void OmokUI::decideWinner(int x, int y, Queue *q) {
+
     int count1 = 1; // count row
     int count2 = 1; // count col
     int count3 = 1; // count left diag
@@ -169,6 +175,7 @@ void OmokUI::decideWinner(int x, int y) {
     }
 
     if (count1 == 5 || count2 == 5 || count3 == 5 || count4 == 5) {
+        isGameFinish = true;
         wmove(win, 37, 0);
         if (checkerboard[x][y] == 'O') {
             wprintw(win, "player 1win\n");
@@ -181,20 +188,23 @@ void OmokUI::decideWinner(int x, int y) {
             winner = 0;
         }
 
-        wprintw(win,"do you want to see replay?(y/n)\n");
+        wprintw(win, "do you want to see replay?(y/n)\n");
         int key;
-        while(1){
-            keypad(win,TRUE);
+        while (1) {
+            keypad(win, TRUE);
             noecho();
             key = wgetch(win);
 
-            if(key == 'y')
+            if (key == 'y') {
                 break;
-            else{
+            } else if (key == 'n') {
+                isreplay = 0;
+                return;
+            } else {
                 wprintw(win, "wrong!");
             }
         }
-        q.run_test();
+        isreplay = q->run_test();
     }
 }
 

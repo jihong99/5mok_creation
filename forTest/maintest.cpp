@@ -1,8 +1,12 @@
+#include "OmokUI.h"
+#include "filefunc.h"
+#include "replay.h"
+#include <ctype.h>
+#include <curses.h>
 #include <fcntl.h>
 #include <form.h>
-#include <ctype.h>
+#include <iostream>
 #include <ncurses.h>
-#include <curses.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -10,14 +14,9 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
-#include <iostream>
-#include "OmokUI.h"
-#include "replay.h"
-#include "filefunc.h"
 
 std::string user1;
 std::string user2;
-
 int login() {
     FIELD *field[3]; // for input user name
     FORM *my_form;   // making field
@@ -71,66 +70,70 @@ int login() {
                 break;
             case 27:      // esc key
                 endwin(); // exit --> back to menu window
-				return 27;
+                return 27;
             default:
                 form_driver(my_form, ch); // input string
                 break;
             }
         }
 
-       /* char usr1[30],usr2[30];
+        /* char usr1[30],usr2[30];
 
-        strcpy(usr1, field_buffer(field[0], 0)); // make user1 name
-        strcpy(usr2, field_buffer(field[1], 0)); // make user2 name
-        if (isspace(usr1[0]) || isspace(usr2[0])) {
-            // if the name begins with a blank space, show error message
-            mvprintw(16, 20, "please remove the spaces in the first letter");
-            continue;
-        }
-		mvprintw(20,20,"%s %s",usr1,usr2);
-		refresh();
+         strcpy(usr1, field_buffer(field[0], 0)); // make user1 name
+         strcpy(usr2, field_buffer(field[1], 0)); // make user2 name
+         if (isspace(usr1[0]) || isspace(usr2[0])) {
+             // if the name begins with a blank space, show error message
+             mvprintw(16, 20, "please remove the spaces in the first letter");
+             continue;
+         }
+                 mvprintw(20,20,"%s %s",usr1,usr2);
+                 refresh();
 
-        char u1[30];
-        char u2[30];
+         char u1[30];
+         char u2[30];
 
-        for (int i = 0; i < sizeof(usr1); i++) {
-            u1[i] = usr1[i];
-        }
-        for (int i = 0; i < sizeof(usr2); i++) {
-            u2[i] = usr2[i];
-        }*/
+         for (int i = 0; i < sizeof(usr1); i++) {
+             u1[i] = usr1[i];
+         }
+         for (int i = 0; i < sizeof(usr2); i++) {
+             u2[i] = usr2[i];
+         }*/
 
-        string name1(field_buffer(field[0],0));
-        string name2(field_buffer(field[1],0));
+        string name1(field_buffer(field[0], 0));
+        string name2(field_buffer(field[1], 0));
 
         mvprintw(20, 35, "%s%s", name1.c_str(), name2.c_str());
         refresh();
 
         user1 = name1;
         user2 = name2;
-		
+
         unpost_form(my_form);
         free_form(my_form); // end use form
         free_field(field[0]);
         free_field(field[1]);
         free_field(field[2]);
         endwin();
+        break;
     }
-	return 0;
+    return 0;
 }
 
-int main(){
-    login();
+int main() {
+    int play = 0;
+    while (play != -1) {
+        OmokUI *a = new OmokUI();
+        if (a->isreplay == 0) {
+            login();
+        }
 
-    userfilecreate(user1,user2);
-    scoreboard(user1,user2);
-
-    OmokUI a;
-    a.run();
-
-    int result=0;
-    userfilesave(user1,user2,result);
-
-
+        userfilecreate(user1, user2);
+        scoreboard(user1, user2);
+        a->run();
+        play = a->isreplay;
+        int result = 0;
+        userfilesave(user1, user2, result);
+        delete a;
+    }
     return 0;
 }
