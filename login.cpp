@@ -6,7 +6,7 @@
 #include <ncurses.h>
 #include <string.h>
 #include <string>
-#include "user.h"
+#include "login.h"
 
 using std::string;
 
