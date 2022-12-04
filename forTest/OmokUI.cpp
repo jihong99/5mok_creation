@@ -39,7 +39,7 @@ void OmokUI::run() {
 
     wmove(win, 0, 0);
 
-    while (1) { // test while
+    while (1) {
         if (isGameFinish) {
             break;
         }

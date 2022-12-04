@@ -34,6 +34,7 @@ int main() {
 
         cont = scoreboard(user1, user2);
         if (cont == -1) {
+            play = 0;
             delete omokGame;
             delete login;
             continue;
