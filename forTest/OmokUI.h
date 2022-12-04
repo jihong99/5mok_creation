@@ -30,3 +30,4 @@ class OmokUI {
     void setUsername(string user1, string user2);
     int startUI();
 };
+void finishUI();

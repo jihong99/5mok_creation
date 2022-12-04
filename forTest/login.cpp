@@ -126,6 +126,7 @@ int Login::startLogin() {
         endwin();
         break;
     }
+    attroff(COLOR_PAIR(1));
     return 0;
 }
 string Login::getUser1() { return user1; }

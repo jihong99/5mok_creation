@@ -47,5 +47,6 @@ int main() {
         delete omokGame;
         delete login;
     }
+    finishUI();
     return 0;
 }

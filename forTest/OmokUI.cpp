@@ -239,6 +239,7 @@ int OmokUI::startUI() {
     cbreak();
     start_color();
     init_pair(1, COLOR_GREEN, COLOR_BLACK);
+    attron(COLOR_PAIR(1));
     mvprintw(5, 5, " _____     __      __    _____     ___ __\n");
     mvprintw(6, 5, "|  _  |   |  \\   /  |   |  _  |   |  |/  /\n");
     mvprintw(7, 5, "| |_| |   |   \\_/   |   | |_| |   |     /\n");
@@ -246,6 +247,7 @@ int OmokUI::startUI() {
     mvprintw(12, 35, "Start the game : y");
     mvprintw(14, 35, "quit : q");
     refresh();
+    attroff(COLOR_PAIR(1));
     keypad(stdscr, TRUE);
     ch = getch();
     while (ch != 'y' && ch != 'q') {
@@ -259,4 +261,16 @@ int OmokUI::startUI() {
         return -1;
     }
     return -1;
+}
+
+void finishUI() {
+    clear();
+    initscr();
+    noecho();
+    mvprintw(12, 30, " Good Bye ~");
+    refresh();
+    getch();
+    clear();
+    endwin();
+    return;
 }
