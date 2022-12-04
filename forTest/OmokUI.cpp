@@ -39,7 +39,7 @@ void OmokUI::run() {
 
     wmove(win, 0, 0);
 
-    while (1) { // test while
+    while (1) {
         if (isGameFinish) {
             break;
         }
@@ -202,7 +202,7 @@ void OmokUI::decideWinner(int x, int y, Queue *q) {
             if (key == 'y') {
                 break;
             } else if (key == 'n') {
-                isreplay = 0;
+                isreplay = 1;
                 return;
             } else {
                 wprintw(win, "wrong!");
@@ -229,4 +229,48 @@ int OmokUI::getWinner() { return winner; }
 void OmokUI::setUsername(string user1, string user2) {
     this->user1 = user1;
     this->user2 = user2;
+}
+
+int OmokUI::startUI() {
+    char ch;
+    clear();
+    initscr();
+    noecho();
+    cbreak();
+    start_color();
+    init_pair(1, COLOR_GREEN, COLOR_BLACK);
+    attron(COLOR_PAIR(1));
+    mvprintw(5, 5, " _____     __      __    _____     ___ __\n");
+    mvprintw(6, 5, "|  _  |   |  \\   /  |   |  _  |   |  |/  /\n");
+    mvprintw(7, 5, "| |_| |   |   \\_/   |   | |_| |   |     /\n");
+    mvprintw(8, 5, "|_____|   |__|\\_/|__|   |_____|   |__|\\_\\\n");
+    mvprintw(12, 35, "Start the game : y");
+    mvprintw(14, 35, "quit : q");
+    refresh();
+    attroff(COLOR_PAIR(1));
+    keypad(stdscr, TRUE);
+    ch = getch();
+    while (ch != 'y' && ch != 'q') {
+        ch = getch();
+    }
+    if (ch == 'y') {
+        endwin();
+        return 0;
+    } else if (ch == 'q') {
+        endwin();
+        return -1;
+    }
+    return -1;
+}
+
+void finishUI() {
+    clear();
+    initscr();
+    noecho();
+    mvprintw(12, 30, " Good Bye ~");
+    refresh();
+    getch();
+    clear();
+    endwin();
+    return;
 }

@@ -28,4 +28,6 @@ class OmokUI {
     bool checkStone(int x, int y, char comp, bool &iscontinue);
     int getWinner(); // return winner (player1 return 1, player2 return 0)
     void setUsername(string user1, string user2);
+    int startUI();
 };
+void finishUI();

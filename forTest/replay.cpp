@@ -27,7 +27,7 @@ int Queue::run_test() {
     isreplay = print_replay();
 
     // getch();
-    // endwin();
+    endwin();
     return isreplay;
 }
 void Queue::push_xy(pair<int, int> p) {
@@ -97,8 +97,8 @@ int Queue::print_replay() {
 
     // login();
     // for test, if press esc, shutdown.
-    // endwin();
-    // wclear(win);
+    endwin();
+    wclear(win);
     return isreplay;
 }
 void Queue::drawCheckerboard() {

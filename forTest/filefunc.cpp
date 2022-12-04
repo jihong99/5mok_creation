@@ -369,7 +369,9 @@ int scoreboard(string username1, string username2) {
         initscr();
         noecho();
         clear();
-
+        start_color();
+        init_pair(1, COLOR_GREEN, COLOR_BLACK);
+        attron(COLOR_PAIR(1));
         mvprintw(0, 0, "Press q to leave");
         mvprintw(1, 0, "Press Enter to game start");
 
@@ -384,6 +386,7 @@ int scoreboard(string username1, string username2) {
         mvprintw(18, 35, "Your score now : %d", olduser2->score);
 
         refresh();
+        attroff(COLOR_PAIR(1));
         char ch = getch();
         while (ch != 'q' && ch != 10) {
             ch = getch();
