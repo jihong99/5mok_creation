@@ -76,7 +76,9 @@ int Queue::print_replay() {
                 keypad(win, TRUE);
                 noecho();
                 d = wgetch(win);
-
+                while (d != 89 && d != 121 && d != 27) {
+                    d = wgetch(win);
+                }
                 if (d == 89 || d == 121) {
                     isreplay = 1;
 
