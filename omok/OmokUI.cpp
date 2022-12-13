@@ -147,33 +147,39 @@ void OmokUI::decideWinner(int x, int y, Queue *q) {
     int count4 = 1; // count right diag
     bool iscontinue1 = true;
     bool iscontinue2 = true;
+    bool iscontinue3 = true;
+    bool iscontinue4 = true;
+    bool iscontinue5 = true;
+    bool iscontinue6 = true;
+    bool iscontinue7 = true;
+    bool iscontinue8 = true;
     char comp = checkerboard[x][y];
 
     for (int i = 1; i < 5; i++) {
         if (checkStone(x, y + 4 * i, comp, iscontinue1)) {
             count1++;
         } // row
-        if (checkStone(x + 2 * i, y, comp, iscontinue1)) {
+        if (checkStone(x + 2 * i, y, comp, iscontinue2)) {
             count2++;
         } // column
-        if (checkStone(x + 2 * i, y + 4 * i, comp, iscontinue1)) {
+        if (checkStone(x + 2 * i, y + 4 * i, comp, iscontinue3)) {
             count3++;
         } // left diagonal
-        if (checkStone(x - 2 * i, y + 4 * i, comp, iscontinue1)) {
+        if (checkStone(x - 2 * i, y + 4 * i, comp, iscontinue4)) {
             count4++;
         } // right diagonal
     }
     for (int i = -1; i > -5; i--) {
-        if (checkStone(x, y + 4 * i, comp, iscontinue2)) {
+        if (checkStone(x, y + 4 * i, comp, iscontinue5)) {
             count1++;
         } // row
-        if (checkStone(x + 2 * i, y, comp, iscontinue1)) {
+        if (checkStone(x + 2 * i, y, comp, iscontinue6)) {
             count2++;
         } // column
-        if (checkStone(x + 2 * i, y + 4 * i, comp, iscontinue1)) {
+        if (checkStone(x + 2 * i, y + 4 * i, comp, iscontinue7)) {
             count3++;
         } // left diagonal
-        if (checkStone(x - 2 * i, y + 4 * i, comp, iscontinue1)) {
+        if (checkStone(x - 2 * i, y + 4 * i, comp, iscontinue8)) {
             count4++;
         } // right diagonal
     }
@@ -214,14 +220,17 @@ void OmokUI::decideWinner(int x, int y, Queue *q) {
 
 bool OmokUI::checkStone(int x, int y, char comp, bool &iscontinue) {
     if (x < 0 || x >= 37 || y < 0 || y >= 73) {
+        iscontinue = false;
         return false;
     }
     if (!iscontinue) {
+        iscontinue = false;
         return false;
     }
     if (checkerboard[x][y] == comp) {
         return true;
     }
+    iscontinue = false;
     return false;
 }
 
